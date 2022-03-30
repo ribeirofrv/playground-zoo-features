@@ -2,9 +2,7 @@ const { species } = require('../data/zoo_data');
 
 const animalsMap = species.reduce((acc, curr) => {
   // Se não existir uma key no objeto correspondente ao indice atual, ela é criada
-  if (!acc[curr.location]) {
-    acc[curr.location] = [];
-  }
+  if (!acc[curr.location]) acc[curr.location] = [];
 
   acc[curr.location].push(curr.name); // Adiciona animal ao array da localização correspondente
 
@@ -12,17 +10,15 @@ const animalsMap = species.reduce((acc, curr) => {
 }, {});
 
 const residentsByNames = (option) => species.reduce((acc, curr) => {
-  const animal = curr.residents; // busca residentes da especie atual
+  let animal = curr.residents; // busca residentes da especie atual
+  // Se existir a opção sex no parametro  ele reatribui a let animal
+  if (option.sex) animal = animal.filter((key) => key.sex === option.sex);
   const names = animal.map((key) => key.name); // guarda nomes de animais da especie atual
   let sortedName = names;
 
-  if (!acc[curr.location]) {
-    acc[curr.location] = []; // Adiciona região
-  }
+  if (!acc[curr.location]) acc[curr.location] = []; // Adiciona região
 
-  const animalByName = { // cria objeto de especies
-    [curr.name]: [],
-  };
+  const animalByName = { [curr.name]: [] };
 
   if (option.sorted) sortedName = names.sort();
 
@@ -37,7 +33,5 @@ const getAnimalMap = (options) => {
 
   return residentsByNames(options);
 };
-
-// console.log(getAnimalMap());
 
 module.exports = getAnimalMap;
